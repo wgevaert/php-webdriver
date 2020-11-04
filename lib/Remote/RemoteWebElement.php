@@ -521,9 +521,11 @@ class RemoteWebElement implements WebDriverElement, WebDriverLocatable
      */
     protected function createTemporaryZipArchive($fileToZip)
     {
+        $tmpdir = method_exists($this->fileDetector, 'getTmpDir') ? $this->fileDetector->getTmpDir() : sys_get_temp_dir();
+
         // Create a temporary file in the system temp directory.
         // Intentionally do not use `tempnam()`, as it creates empty file which zip extension may not handle.
-        $tempZipPath = sys_get_temp_dir() . '/' . uniqid('WebDriverZip', false);
+        $tempZipPath =  $tmpdir . '/' . uniqid('WebDriverZip', false);
 
         $zip = new ZipArchive();
         if (($errorCode = $zip->open($tempZipPath, ZipArchive::CREATE)) !== true) {
